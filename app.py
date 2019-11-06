@@ -2,11 +2,6 @@ import flask
 import json
 import os
 
-# EDIT THE FOLLOWING LINE
-DefaultTitle="Work in progress"
-
-# Don't touch the code below unless you really mean to.
-
 # Templates
 hello = """
 <!DOCTYPE html>
@@ -14,7 +9,7 @@ hello = """
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>""" + DefaultTitle + """</title>
+    <title>Hello</title>
   </head>
   <body>
     <h1> {{ greeting }}  </h1>
@@ -22,7 +17,8 @@ hello = """
     <img src="/static/{{ kitten }}"/ alt="An image of a kitten should be here.">
     {% endif %}
   </body>
-</html>"""
+</html>
+"""
 
 # Default configuration
 defaults = { "pwd": "defaultPassword", "port": 8080, "host": '0.0.0.0', "debug": "False", "greeting": "defaultHello"}
@@ -64,13 +60,12 @@ def main():
     with open('config/custom.json') as custom_config_file:
       app.config['custom'] = json.load(custom_config_file)
   except FileNotFoundError:
-    app.config['custom'] = {}
     pass
 
   pwd = os.getenv("PASSWORD")
   if not pwd == None:
-    app.config['custom']['pwd'] = pwd.strip()
-  
+    app.config['custom']['pwd'] = pwd
+
   mergeDefaultConfig(app.config['custom'])
   if not "pwd" in app.config['custom']:
     app.config['custom']
