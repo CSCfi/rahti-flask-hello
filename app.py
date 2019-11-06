@@ -3,7 +3,7 @@ import json
 import os
 
 # EDIT THE FOLLOWING LINE
-DefaultTitle="Application from student 27.02.2020"
+DefaultTitle="Hello"
 
 # Don't touch the code below unless you really mean to.
 
@@ -64,13 +64,13 @@ def main():
     with open('config/custom.json') as custom_config_file:
       app.config['custom'] = json.load(custom_config_file)
   except FileNotFoundError:
-    app.config['custom'] = {}
     pass
 
   pwd = os.getenv("PASSWORD")
   if not pwd == None:
     app.config['custom']['pwd'] = pwd.strip()
   
+
   mergeDefaultConfig(app.config['custom'])
   if not "pwd" in app.config['custom']:
     app.config['custom']
