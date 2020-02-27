@@ -2,8 +2,10 @@ import flask
 import json
 import os
 
+from pathlib import Path
+
 # EDIT THE FOLLOWING LINE
-DefaultTitle="Work in progress"
+DefaultTitle="Application from student ????????"
 
 # Don't touch the code below unless you really mean to.
 
@@ -17,32 +19,34 @@ hello = """
     <title>""" + DefaultTitle + """</title>
   </head>
   <body>
-    <h1> {{ greeting }}  </h1>
-    {% if kitten != "" %}
-    <img src="/static/{{ kitten }}"/ alt="An image of a kitten should be here.">
-    {% endif %}
+    <h1>{{ greeting }}</h1>
+    <ul>
+    {% for kitten in kittens %}
+      <li><img src='{{ kitten }}'/> {{ kitten }}</li>
+    {% endfor %}
+    </ul>
   </body>
 </html>"""
 
 # Default configuration
-defaults = { "pwd": "defaultPassword", "port": 8080, "host": '0.0.0.0', "debug": "False", "greeting": "defaultHello"}
+defaults = { "pwd": "defaultPassword", "port": 8080, "host": '0.0.0.0', "debug": "False", "greeting": "See all kittens in /static folder"}
 
 # Flask app object
 app = flask.Flask(__name__,
     static_url_path='/static',
-    static_folder='static')
+    static_folder='/static')
 
 # Routes
 @app.route("/", methods=['GET'])
 def home():
-  return "Hello, world!"
+  return "Hello world! See the <a href='/kitten'>kittens</a>"
 
 @app.route("/kitten", methods=['GET'])
 def kitten():
   config = app.config['custom']
   return flask.render_template_string(
-      hello, 
-      kitten='kitten.jpg', 
+      hello,
+      kittens=Path('/static/').rglob('*.jpg'),
       greeting = config['greeting'])
 
 @app.route("/secret-kitten/<string:pwd>", methods=['GET'])
@@ -70,7 +74,7 @@ def main():
   pwd = os.getenv("PASSWORD")
   if not pwd == None:
     app.config['custom']['pwd'] = pwd.strip()
-  
+
   mergeDefaultConfig(app.config['custom'])
   if not "pwd" in app.config['custom']:
     app.config['custom']
