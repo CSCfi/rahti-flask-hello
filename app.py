@@ -2,11 +2,12 @@
   Simple Flask app
 '''
 import json
+import os
 from pathlib import Path
 import flask
 
 # Templates
-# In a proper Flask application all these templates should be in idepent files
+# In a proper Flask application all these templates should be in indepent files
 STYLE = """
 body {
   # CHANGE background color from 'silver' to 'beige'
@@ -30,23 +31,7 @@ PAGE = """
     <style>""" + STYLE + """</style>
   </head>
   <body>
-  <h1>Hello {{student}}!</h1>
-  <p>See the <a href='/kitten'>kittens</a></p>
-  </body>
-</html>
-"""
-
-KITTEN_PAGE = """
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{{ student }}</title>
-    <style>""" + STYLE + """</style>
-  </head>
-  <body>
-    <h1>This is the kitten page from {{ student }}</h1>
+    <h1>This is the photo gallery from {{ student }}</h1>
     <ul>{% for kitten in kittens %}
       <li><img src='{{ kitten }}'/> {{ kitten }}</li>
     {% endfor %}</ul>
@@ -55,9 +40,11 @@ KITTEN_PAGE = """
 """
 
 # Default configuration
-config = {
+defaults = {
     "student": "??????",
     "debug": False}
+
+config = {}
 
 # Flask app object
 app = flask.Flask(__name__,
@@ -68,19 +55,12 @@ app = flask.Flask(__name__,
 @app.route("/", methods=['GET'])
 def home():
     '''
-      Hello page
-    '''
-    return flask.render_template_string(
-        PAGE)
-
-@app.route("/kitten", methods=['GET'])
-def kitten():
-    '''
-      Displays all JPG files in /static, if any
+      Hello page, shows photos in the /static folder
     '''
     kittens = Path('/static/').rglob('*.jpg')
     return flask.render_template_string(
-        KITTEN_PAGE,
+        PAGE,
+        student=config["student"],
         kittens=kittens)
 
 # Entry function
@@ -89,9 +69,19 @@ def main():
       Main entry function
     '''
 
-    # Change debug if env DEBUG exists
-
     # Load student name from file
+    global config
+    try:
+        with open('/etc/flask/config.json') as custom_config_file:
+            config = json.load(custom_config_file)
+    except FileNotFoundError:
+        config = defaults
+
+    try:
+        if os.environ['DEBUG']:
+            config["debug"] = True
+    except KeyError:
+        pass
 
     print('Configuration:')
     print(json.dumps(config))
