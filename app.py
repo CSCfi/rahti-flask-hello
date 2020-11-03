@@ -5,17 +5,18 @@ import json
 from pathlib import Path
 import flask
 
-# EDIT THE FOLLOWING LINE
-STUDENT = "????????"
-
 # Templates
 # In a proper Flask application all these templates should be in idepent files
 STYLE = """
 body {
-  background-color: #f5f5f5;
+  # CHANGE background color from 'silver' to 'beige'
+  background-color: silver;
   font-family: "Helvetica Neue",Helvetica,"Liberation Sans",Arial,sans-serif;
   font-size: 14px;
   padding: 10%;
+}
+img {
+  width: 90%;
 }
 """
 
@@ -25,11 +26,11 @@ PAGE = """
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>""" + STUDENT + """</title>
+    <title>{{ student }}</title>
     <style>""" + STYLE + """</style>
   </head>
   <body>
-  <h1>Hello """ + STUDENT + """!</h1>
+  <h1>Hello {{student}}!</h1>
   <p>See the <a href='/kitten'>kittens</a></p>
   </body>
 </html>
@@ -41,11 +42,11 @@ KITTEN_PAGE = """
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>""" + STUDENT + """</title>
+    <title>{{ student }}</title>
     <style>""" + STYLE + """</style>
   </head>
   <body>
-    <h1>This is the kitten page from """ + STUDENT + """</h1>
+    <h1>This is the kitten page from {{ student }}</h1>
     <ul>{% for kitten in kittens %}
       <li><img src='{{ kitten }}'/> {{ kitten }}</li>
     {% endfor %}</ul>
@@ -55,6 +56,7 @@ KITTEN_PAGE = """
 
 # Default configuration
 config = {
+    "student": "??????",
     "debug": False}
 
 # Flask app object
@@ -86,6 +88,11 @@ def main():
     '''
       Main entry function
     '''
+
+    # Change debug if env DEBUG exists
+
+    # Load student name from file
+
     print('Configuration:')
     print(json.dumps(config))
 
