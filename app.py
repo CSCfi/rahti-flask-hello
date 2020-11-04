@@ -2,6 +2,7 @@
   Simple Flask app
 '''
 import json
+
 from pathlib import Path
 import flask
 
@@ -20,11 +21,13 @@ body {
 """
 
 PAGE = """
+
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+
     <title>""" + STUDENT + """</title>
     <style>""" + STYLE + """</style>
   </head>
@@ -32,26 +35,9 @@ PAGE = """
   <h1>Hello """ + STUDENT + """!</h1>
   <p>See the <a href='/kitten'>kittens</a></p>
   </body>
-</html>
-"""
+</html>"""
 
-KITTEN_PAGE = """
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>""" + STUDENT + """</title>
-    <style>""" + STYLE + """</style>
-  </head>
-  <body>
-    <h1>This is the kitten page from """ + STUDENT + """</h1>
-    <ul>{% for kitten in kittens %}
-      <li><img src='{{ kitten }}'/> {{ kitten }}</li>
-    {% endfor %}</ul>
-  </body>
-</html>
-"""
+
 
 # Default configuration
 config = {
@@ -73,6 +59,7 @@ def home():
 
 @app.route("/kitten", methods=['GET'])
 def kitten():
+
     '''
       Displays all JPG files in /static, if any
     '''
