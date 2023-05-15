@@ -51,12 +51,16 @@ app = flask.Flask(__name__,
                   static_folder='/static')
 
 # Routes
+# Routes are used to bind a python function to a url. 
+# Here we tell that when someone tries to access "localhost:5000/", i.e nothing after /, we have to run home() function
 @app.route("/", methods=['GET'])
 def home():
     '''
       Hello page, shows photos in the /static folder
     '''
-    kittens = Path('/static/').rglob('*.jpg')
+    kittens = Path('/static/').rglob('*.jpg') 
+    # render_template function is used to render or display a webpage. 
+    # Here, we used render_template_string which  renders from a string that is passed in rather than from a file in the templates folder.
     return flask.render_template_string(
         PAGE,
         student=config["student"],
